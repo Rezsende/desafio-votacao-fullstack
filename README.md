@@ -76,11 +76,28 @@ Exemplos de retorno do serviço
 - Teste bem sua solução, evite bugs
 
   Observações importantes
+
 - Não inicie o teste sem sanar todas as dúvidas
 - Iremos executar a aplicação para testá-la, cuide com qualquer dependência externa e
   deixe claro caso haja instruções especiais para execução do mesmo
   Classificação da informação: Uso Interno
 
-
-
 # desafio-votacao
+
+# Desafio Votação - Backend
+
+## 🚀 Como rodar o projeto localmente
+
+Sistema de votação para assembleias com back-end em Spring Boot e banco de dados PostgreSQL.
+
+### 📦 1. Subir o banco de dados PostgreSQL:13 com Docker
+
+Certifique-se de ter o [Docker](https://www.docker.com/products/docker-desktop/) instalado.
+
+1. No terminal, navegue até o diretório onde está o `docker-compose.yml` do projeto.
+2. Rode o comando:
+
+```bash
+docker-compose up -d
+
+```
