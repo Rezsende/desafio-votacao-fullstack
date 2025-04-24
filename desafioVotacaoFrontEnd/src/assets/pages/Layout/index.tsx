@@ -1,4 +1,4 @@
-import { FiFileText } from "react-icons/fi";
+import { FiFileText, FiUserPlus } from "react-icons/fi";
 import { NavLink, Outlet } from "react-router-dom";
 
 export const Layout = () => {
@@ -11,6 +11,10 @@ export const Layout = () => {
             <NavLink to="/criar-pauta" className={({ isActive }) => `flex items-center p-3 rounded-lg transition-colors ${isActive ? "bg-blue-800" : "hover:bg-blue-600"}`}>
               <FiFileText className="mr-3" />
               <span>Criar Pauta</span>
+            </NavLink>
+            <NavLink to="/criar-associado" className={({ isActive }) => `flex items-center p-3 rounded-lg transition-colors ${isActive ? "bg-blue-800" : "hover:bg-blue-600"}`}>
+              <FiUserPlus className="mr-3" />
+              <span>Criar Associado</span>
             </NavLink>
           </nav>
         </div>

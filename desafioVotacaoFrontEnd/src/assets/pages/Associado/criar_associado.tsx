@@ -2,82 +2,78 @@ import { useForm } from "react-hook-form";
 import { FiAlertCircle } from "react-icons/fi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { usePautaMutation } from "./hooks/data_post";
+import { useAssociadoMutation } from "./hooks/data_post";
 import { schema } from "./schema/schema";
-
-type CriarPautaFormData = z.infer<typeof schema>;
-
-export function CriarPauta() {
+type CriarAssociadoFormData = z.infer<typeof schema>;
+export function CriarAssociado() {
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<CriarPautaFormData>({
+  } = useForm<CriarAssociadoFormData>({
     resolver: zodResolver(schema),
   });
 
-  const { mutate } = usePautaMutation();
+  const { mutate } = useAssociadoMutation();
 
-  const onSubmit = (data: CriarPautaFormData) => {
+  const onSubmit = (data: CriarAssociadoFormData) => {
     mutate(data, {
       onSuccess: () => {
         reset({
-          titulo: "",
-          descricao: "",
+          nome: "",
+          cpf: "",
         });
       },
     });
   };
-
   return (
     <div className="max-w-2xl mx-auto p-6">
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         <div className="bg-blue-600 px-6 py-4">
-          <h2 className="text-xl font-semibold text-white">Criar Nova Pauta</h2>
+          <h2 className="text-xl font-semibold text-white">Criar Novo Associado</h2>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
           <div>
             <label htmlFor="titulo" className="block text-sm font-medium text-gray-700 mb-1">
-              Título *
+              Nome *
             </label>
             <div className="relative">
               <input
                 id="titulo"
                 type="text"
-                {...register("titulo")}
-                className={`block w-full px-4 py-2 rounded-md border ${errors.titulo ? "border-red-500" : "border-gray-300"} focus:ring-blue-500 focus:border-blue-500`}
-                placeholder="Digite o título da pauta"
+                {...register("nome")}
+                className={`block w-full px-4 py-2 rounded-md border ${errors.nome ? "border-red-500" : "border-gray-300"} focus:ring-blue-500 focus:border-blue-500`}
+                placeholder="Digite o Nome Completo"
               />
-              {errors.titulo && (
+              {errors.nome && (
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                   <FiAlertCircle className="h-5 w-5 text-red-500" />
                 </div>
               )}
             </div>
-            {errors.titulo && <p className="mt-1 text-sm text-red-600">{errors.titulo.message}</p>}
+            {errors.nome && <p className="mt-1 text-sm text-red-600">{errors.nome.message}</p>}
           </div>
 
           <div>
             <label htmlFor="descricao" className="block text-sm font-medium text-gray-700 mb-1">
-              Descrição *
+              CPF *
             </label>
             <div className="relative">
-              <textarea
-                id="descricao"
-                rows={4}
-                {...register("descricao")}
-                className={`block w-full px-4 py-2 rounded-md border ${errors.descricao ? "border-red-500" : "border-gray-300"} focus:ring-blue-500 focus:border-blue-500`}
-                placeholder="Descreva os detalhes da pauta"
+              <input
+                id="cpf"
+                {...register("cpf")}
+                className={`block w-full px-4 py-2 rounded-md border ${errors.cpf ? "border-red-500" : "border-gray-300"} focus:ring-blue-500 focus:border-blue-500`}
+                placeholder="Exemplo: 000.000.000-00"
               />
-              {errors.descricao && (
+              {errors.cpf && (
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                   <FiAlertCircle className="h-5 w-5 text-red-500" />
                 </div>
               )}
             </div>
-            {errors.descricao && <p className="mt-1 text-sm text-red-600">{errors.descricao.message}</p>}
+            {errors.cpf && <p className="mt-1 text-sm text-red-600">{errors.cpf.message}</p>}
           </div>
 
           <div className="flex justify-end space-x-3 pt-4">
