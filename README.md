@@ -86,7 +86,7 @@ Exemplos de retorno do serviço
 
 # Desafio Votação - Backend
 
-## 🚀 Como rodar o projeto localmente
+## 🚀 Como rodar o projeto back end localmente
 
 Sistema de votação para assembleias com back-end em Spring Boot e banco de dados PostgreSQL.
 
@@ -99,5 +99,24 @@ Certifique-se de ter o [Docker](https://www.docker.com/products/docker-desktop/)
 
 ```bash
 docker-compose up -d
+
+```
+
+## 🚀 Como rodar o projeto front end localmente
+
+### 📦 1. baixa todas a bibliotecas necessarias
+
+1. No terminal, navegue até o diretório onde está o projeto.
+2. Rode o comando para instalar as bibliotecas:
+
+```bash
+npm i ou npm install
+
+```
+
+3. Rode o comando para iniciar o projeto:
+
+```bash
+npm run dev
 
 ```
