@@ -19,10 +19,8 @@ public class Voto {
     @EqualsAndHashCode.Exclude
     private Pauta pauta;
 
-    @ManyToOne
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    private Associado associado;
+    @Column(length = 11)
+    private String cpf;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 10)

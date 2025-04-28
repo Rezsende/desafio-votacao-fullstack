@@ -30,7 +30,7 @@ public class VotoController {
         try {
             votoService.registrarVoto(
                     request.pautaId(),
-                    request.associadoId(),
+                    request.cpf(),
                     request.opcao());
 
             Map<String, Object> response = new HashMap<>();

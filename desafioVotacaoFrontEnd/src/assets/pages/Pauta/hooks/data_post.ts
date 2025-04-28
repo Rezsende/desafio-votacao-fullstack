@@ -18,6 +18,9 @@ export function usePautaMutation() {
   const queryCliente = useQueryClient();
   const mutate = useMutation({
     mutationFn: criarPauta,
+    onSuccess: () => {
+      queryCliente.fetchInfiniteQuery({ queryKey: ["pautasKey"], initialPageParam: undefined });
+    },
   });
   return mutate;
 }

@@ -1,12 +1,14 @@
 package com.desafioVotacaoBackend.desafioVotacaoBackend.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.desafioVotacaoBackend.desafioVotacaoBackend.model.Pauta;
 import com.desafioVotacaoBackend.desafioVotacaoBackend.record.CriarPautaRecord;
+import com.desafioVotacaoBackend.desafioVotacaoBackend.record.ListaPauta;
 import com.desafioVotacaoBackend.desafioVotacaoBackend.service.PautaService;
 
 @RestController
@@ -66,6 +69,11 @@ public class PautaController {
 
             return ResponseEntity.badRequest().body(erro);
         }
+    }
+
+    @GetMapping
+    public List<ListaPauta> findAlls() {
+        return service.listarTodasPautas().stream().map(ListaPauta::new).toList();
     }
 
 }

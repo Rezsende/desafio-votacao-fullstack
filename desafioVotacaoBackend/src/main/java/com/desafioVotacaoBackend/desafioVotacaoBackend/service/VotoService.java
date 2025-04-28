@@ -6,68 +6,50 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.desafioVotacaoBackend.desafioVotacaoBackend.model.Associado;
 import com.desafioVotacaoBackend.desafioVotacaoBackend.model.Pauta;
 import com.desafioVotacaoBackend.desafioVotacaoBackend.model.Voto;
-import com.desafioVotacaoBackend.desafioVotacaoBackend.repository.AssociadoRepository;
+
 import com.desafioVotacaoBackend.desafioVotacaoBackend.repository.VotoRepository;
 
 @Service
 public class VotoService {
-    @Autowired
-    private VotoRepository repository;
-    @Autowired
-    private AssociadoRepository associadoRepository;
+        @Autowired
+        private VotoRepository repository;
 
-    @Autowired
-    private PautaService pautaService;
+        @Autowired
+        private PautaService pautaService;
 
-    public Voto registrarVoto(Long pautaId, Long idAssociado, Voto.VotoOpcao opcao) {
-        if (!pautaService.verificarSessaoAtiva(pautaId)) {
-            throw new RuntimeException("Sessão de votação não está ativa para esta pauta");
+        public Voto registrarVoto(Long pautaId, String cpf, Voto.VotoOpcao opcao) {
+                if (!pautaService.verificarSessaoAtiva(pautaId)) {
+                        throw new RuntimeException("Sessão de votação não está ativa para esta pauta");
+                }
+
+                Pauta pauta = pautaService.buscarPautaPorId(pautaId)
+                                .orElseThrow(() -> new RuntimeException("Pauta não encontrada"));
+
+                boolean votoExistente = repository.existsByPautaIdAndCpf(pautaId, cpf);
+                if (votoExistente) {
+                        throw new RuntimeException("CPF já votou nesta pauta");
+                }
+
+                Voto voto = new Voto();
+                voto.setCpf(cpf);
+                voto.setDataVoto(LocalDateTime.now());
+                voto.setOpcao(opcao);
+                voto.setPauta(pauta);
+
+                return repository.save(voto);
         }
 
-        Pauta pauta = pautaService.buscarPautaPorId(pautaId)
-                .orElseThrow(() -> new RuntimeException("Pauta não encontrada"));
+        public Map<String, Long> contabilizarResultado(Long pautaId) {
+                List<Voto> votos = repository.findAll().stream()
+                                .filter(v -> v.getPauta().getId().equals(pautaId))
+                                .collect(Collectors.toList());
 
-        if (verificarAssociadoJaVotou(pautaId, idAssociado)) {
-            throw new RuntimeException("Associado já votou nesta pauta");
+                return votos.stream()
+                                .collect(Collectors.groupingBy(
+                                                v -> v.getOpcao().name(),
+                                                Collectors.counting()));
         }
-
-        Associado associado = associadoRepository.findById(idAssociado)
-                .orElseThrow(() -> new RuntimeException("Associado não encontrado"));
-
-        Voto voto = new Voto();
-        voto.setPauta(pauta);
-        voto.setAssociado(associado);
-        voto.setOpcao(opcao);
-        voto.setDataVoto(LocalDateTime.now());
-
-        return repository.save(voto);
-    }
-
-    public boolean verificarAssociadoJaVotou(Long pautaId, Long idAssociado) {
-        Pauta pauta = pautaService.buscarPautaPorId(pautaId)
-                .orElseThrow(() -> new RuntimeException("Pauta não encontrada"));
-
-        List<Voto> votos = repository.findAll().stream()
-                .filter(v -> v.getPauta().getId().equals(pautaId) &&
-                        v.getAssociado().getId().equals(idAssociado))
-                .collect(Collectors.toList());
-
-        return !votos.isEmpty();
-    }
-
-    public Map<String, Long> contabilizarResultado(Long pautaId) {
-        List<Voto> votos = repository.findAll().stream()
-                .filter(v -> v.getPauta().getId().equals(pautaId))
-                .collect(Collectors.toList());
-
-        return votos.stream()
-                .collect(Collectors.groupingBy(
-                        v -> v.getOpcao().name(),
-                        Collectors.counting()));
-    }
 
 }

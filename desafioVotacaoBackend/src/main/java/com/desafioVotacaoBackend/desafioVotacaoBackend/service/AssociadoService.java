@@ -12,10 +12,10 @@ public class AssociadoService {
     @Autowired
     private AssociadoRepository repository;
 
-    public Associado cadastrarAssociado(String cpf, String nome) {
+    public Associado cadastrarAssociado(String nome, String cpf) {
         Associado associado = new Associado();
-        associado.setCpf(cpf);
         associado.setNome(nome);
+        associado.setCpf(cpf);
         return repository.save(associado);
     }
 

@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Layout } from "./assets/pages/Layout";
 import { CriarPauta } from "./assets/pages/Pauta/criar_pauta";
 import { CriarAssociado } from "./assets/pages/Associado/criar_associado";
+import { Index } from "./assets/pages/Pauta";
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: "criar-associado",
         element: <CriarAssociado />,
+      },
+      {
+        path: "List-pautas",
+        element: <Index />,
       },
     ],
   },

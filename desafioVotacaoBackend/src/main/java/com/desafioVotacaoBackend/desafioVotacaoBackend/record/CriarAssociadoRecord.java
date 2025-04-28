@@ -1,4 +1,4 @@
 package com.desafioVotacaoBackend.desafioVotacaoBackend.record;
 
-public record CriarAssociadoRecord(String cpf, String nome) {
+public record CriarAssociadoRecord(String nome, String cpf) {
 }

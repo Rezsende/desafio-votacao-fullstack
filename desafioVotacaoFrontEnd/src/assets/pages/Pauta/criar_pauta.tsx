@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { usePautaMutation } from "./hooks/data_post";
 import { schema } from "./schema/schema";
+import { useNavigate } from "react-router-dom";
 
 type CriarPautaFormData = z.infer<typeof schema>;
 
@@ -18,6 +19,7 @@ export function CriarPauta() {
   });
 
   const { mutate } = usePautaMutation();
+  const navigate = useNavigate();
 
   const onSubmit = (data: CriarPautaFormData) => {
     mutate(data, {
@@ -26,6 +28,7 @@ export function CriarPauta() {
           titulo: "",
           descricao: "",
         });
+        navigate("/List-pautas");
       },
     });
   };

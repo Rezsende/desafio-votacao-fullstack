@@ -2,7 +2,6 @@ package com.desafioVotacaoBackend.desafioVotacaoBackend.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.List;
 
 @Entity
 @Data
@@ -16,8 +15,4 @@ public class Associado {
     private String cpf;
     private String nome;
 
-    @OneToMany(mappedBy = "associado", cascade = CascadeType.ALL)
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    private List<Voto> votos;
 }
