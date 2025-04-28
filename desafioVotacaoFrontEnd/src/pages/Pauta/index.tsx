@@ -1,7 +1,26 @@
+import { useState } from "react";
 import { Datapauta } from "./hooks/data_fecht";
+import { usePautaSessaoMutation } from "./hooks/data_postIniciarsessao";
 
 export const Index = () => {
   const { data, isLoading, isError } = Datapauta();
+  const { mutate } = usePautaSessaoMutation();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [tempo, setTempo] = useState(1);
+  const [idSelecionado, setIdSelecionado] = useState<number | null>(null);
+  const abrirModal = (id: number) => {
+    setIdSelecionado(id);
+    setIsModalOpen(true);
+  };
+
+  const iniciarSessao = () => {
+    if (idSelecionado !== null) {
+      mutate({ idpauta: idSelecionado, tempo });
+      setIsModalOpen(false);
+      setTempo(1);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -63,7 +82,10 @@ export const Index = () => {
                       </div>
                     </div>
                   ) : (
-                    <button className="mt-4 w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
+                    <button
+                      onClick={() => abrirModal(pauta.id)}
+                      className="mt-4 w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all"
+                    >
                       Iniciar Sessão
                     </button>
                   )}
@@ -73,6 +95,22 @@ export const Index = () => {
           ))}
         </div>
       </div>
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-6 w-96">
+            <h2 className="text-lg font-semibold mb-4">Digite o tempo da sessão (em minutos)</h2>
+            <input type="number" value={tempo} onChange={(e) => setTempo(Number(e.target.value))} className="w-full border border-gray-300 rounded-md px-3 py-2 mb-4" min={1} />
+            <div className="flex justify-end space-x-2">
+              <button onClick={() => setIsModalOpen(false)} className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
+                Cancelar
+              </button>
+              <button onClick={iniciarSessao} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                Iniciar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

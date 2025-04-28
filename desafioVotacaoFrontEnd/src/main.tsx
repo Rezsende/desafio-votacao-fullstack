@@ -3,10 +3,10 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Layout } from "./assets/pages/Layout";
-import { CriarPauta } from "./assets/pages/Pauta/criar_pauta";
-import { CriarAssociado } from "./assets/pages/Associado/criar_associado";
-import { Index } from "./assets/pages/Pauta";
+import { Layout } from "./pages/Layout";
+import { CriarPauta } from "./pages/Pauta/criar_pauta";
+import { CriarAssociado } from "./pages/Associado/criar_associado";
+import { Index } from "./pages/Pauta";
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
