@@ -1,25 +1,62 @@
 import { useState } from "react";
 import { Datapauta } from "./hooks/data_fecht";
 import { usePautaSessaoMutation } from "./hooks/data_postIniciarsessao";
-
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { schemaVoto } from "./schema/schemaVoto";
+import { useVotoMutation } from "./hooks/data_postVotacao";
+import { useNavigate } from "react-router-dom";
+type CriarVotoFormData = z.infer<typeof schemaVoto>;
 export const Index = () => {
   const { data, isLoading, isError } = Datapauta();
   const { mutate } = usePautaSessaoMutation();
-
+  const { mutate: votoMutate } = useVotoMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalVotacaoOpen, setIsModalVotacaoOpen] = useState(false);
   const [tempo, setTempo] = useState(1);
   const [idSelecionado, setIdSelecionado] = useState<number | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<CriarVotoFormData>({
+    resolver: zodResolver(schemaVoto),
+  });
+
+  const navigate = useNavigate();
+
   const abrirModal = (id: number) => {
     setIdSelecionado(id);
     setIsModalOpen(true);
   };
 
+  const abrirModalVotacao = (id: number) => {
+    setIdSelecionado(id);
+    setIsModalVotacaoOpen(true);
+  };
+
   const iniciarSessao = () => {
     if (idSelecionado !== null) {
       mutate({ idpauta: idSelecionado, tempo });
+
       setIsModalOpen(false);
       setTempo(1);
     }
+  };
+
+  const iniciarVotacoa = (data: CriarVotoFormData) => {
+    try {
+      votoMutate({
+        pautaId: idSelecionado ?? 0,
+        cpf: data.cpf,
+        opcao: data.opcao ?? "",
+      });
+      navigate("/");
+      reset();
+    } catch (error) {}
   };
 
   if (isLoading) {
@@ -40,14 +77,14 @@ export const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className=" bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">Sistema de Votação</h1>
           <p className="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">Gerencie as sessões de votação</p>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className=" grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {data?.map((pauta: any) => (
             <div
               key={pauta.id}
@@ -80,6 +117,12 @@ export const Index = () => {
                       <div>
                         <span className="font-medium">Fechamento:</span> {new Date(pauta.dataFechamento).toLocaleString()}
                       </div>
+                      <button
+                        onClick={() => abrirModalVotacao(pauta.id)}
+                        className="mt-4 w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all"
+                      >
+                        Vota
+                      </button>
                     </div>
                   ) : (
                     <button
@@ -110,6 +153,25 @@ export const Index = () => {
             </div>
           </div>
         </div>
+      )}
+      {isModalVotacaoOpen && (
+        <form onSubmit={handleSubmit(iniciarVotacoa)}>
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+            <div className="bg-white rounded-lg p-6 w-96">
+              <h2 className="text-lg font-semibold mb-4">Votação</h2>
+              <label className="text-sm font-semibold">CPF</label>
+              <input type="text" {...register("cpf")} className="w-full border border-gray-300 rounded-md px-3 py-2 mb-4" />
+              <label className="text-sm font-semibold">Opções</label>
+              <input type="text" {...register("opcao")} className="w-full border border-gray-300 rounded-md px-3 py-2 mb-4" />
+              <div className="flex justify-end space-x-2">
+                <button onClick={() => setIsModalVotacaoOpen(false)} className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
+                  Cancelar
+                </button>
+                <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Iniciar</button>
+              </div>
+            </div>
+          </div>
+        </form>
       )}
     </div>
   );
