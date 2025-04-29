@@ -102,6 +102,12 @@ docker-compose up -d
 
 ```
 
+# Credenciais para acessar o banco de dados com gerenciador de bancos de dados.
+
+base: voting_db
+usuario: postgres
+senha: manager
+
 ## 🚀 Como rodar o projeto front end localmente
 
 ### 📦 1. baixa todas a bibliotecas necessarias
