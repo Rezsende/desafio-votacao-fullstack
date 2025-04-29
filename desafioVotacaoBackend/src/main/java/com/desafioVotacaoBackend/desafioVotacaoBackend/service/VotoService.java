@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.desafioVotacaoBackend.desafioVotacaoBackend.model.Pauta;
 import com.desafioVotacaoBackend.desafioVotacaoBackend.model.Voto;
-
+import com.desafioVotacaoBackend.desafioVotacaoBackend.repository.AssociadoRepository;
 import com.desafioVotacaoBackend.desafioVotacaoBackend.repository.VotoRepository;
 
 @Service
@@ -19,6 +19,9 @@ public class VotoService {
         @Autowired
         private PautaService pautaService;
 
+        @Autowired
+        private AssociadoRepository associadoRepository;
+
         public Voto registrarVoto(Long pautaId, String cpf, Voto.VotoOpcao opcao) {
                 if (!pautaService.verificarSessaoAtiva(pautaId)) {
                         throw new RuntimeException("Sessão de votação não está ativa para esta pauta");
@@ -26,6 +29,11 @@ public class VotoService {
 
                 Pauta pauta = pautaService.buscarPautaPorId(pautaId)
                                 .orElseThrow(() -> new RuntimeException("Pauta não encontrada"));
+
+                boolean associadoExiste = associadoRepository.existsByCpf(cpf);
+                if (!associadoExiste) {
+                        throw new RuntimeException("CPF não cadastrado como associado");
+                }
 
                 boolean votoExistente = repository.existsByPautaIdAndCpf(pautaId, cpf);
                 if (votoExistente) {
