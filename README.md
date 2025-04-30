@@ -90,16 +90,20 @@ Exemplos de retorno do serviço
 
 Sistema de votação para assembleias com back-end em Spring Boot e banco de dados PostgreSQL.
 
-### 📦 1. Subir o banco de dados PostgreSQL:13 com Docker
+### 📦 1. Subir o container mais banco de dados PostgreSQL:13 com Docker
 
 Certifique-se de ter o [Docker](https://www.docker.com/products/docker-desktop/) instalado.
 
-1. No terminal, navegue até o diretório onde está o `docker-compose.yml` do projeto.
-2. Rode o comando:
+1. No terminal, na raiz do projeto backend digite no terminal o comando para criar a imagem docker.
+
+```bash
+docker-compose build
+```
+
+2. Rode o comando para criar container em sim:
 
 ```bash
 docker-compose up -d
-
 ```
 
 # Credenciais para acessar o banco de dados com gerenciador de bancos de dados.
